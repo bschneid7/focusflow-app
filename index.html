@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlow - AI-Powered Focus Music Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="container flex justify-between items-center">
+                <div class="logo">
+                    <h1>FocusFlow</h1>
+                    <span class="tagline">AI-Powered Focus Music</span>
+                </div>
+                <div class="header-controls">
+                    <button class="btn btn--sm" id="settingsBtn">Settings</button>
+                    <button class="btn btn--primary btn--sm" id="upgradeBtn">Upgrade to Pro</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <!-- Central Play/Pause -->
+                    <div class="central-control">
+                        <div class="visualizer-container">
+                            <canvas id="visualizer" width="300" height="300"></canvas>
+                            <button class="play-pause-btn" id="masterPlayBtn">
+                                <span class="play-icon">▶</span>
+                                <span class="pause-icon hidden">⏸</span>
+                            </button>
+                        </div>
+                        <div class="master-volume">
+                            <label>Master Volume</label>
+                            <input type="range" id="masterVolume" min="0" max="100" value="50" class="volume-slider">
+                            <span class="volume-value">50%</span>
+                        </div>
+                    </div>
+
+                    <!-- Sound Layers -->
+                    <div class="sound-layers">
+                        <h3>Sound Layers</h3>
+                        <div class="sound-categories" id="soundCategories">
+                            <!-- Dynamic content will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Presets -->
+                    <div class="presets-section">
+                        <h3>Focus Presets</h3>
+                        <div class="preset-grid" id="presetGrid">
+                            <!-- Dynamic content will be populated here -->
+                        </div>
+                        <div class="preset-controls">
+                            <button class="btn btn--secondary" id="savePresetBtn">Save Custom Preset</button>
+                            <button class="btn btn--outline" id="randomizeBtn">Randomize</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session Panel -->
+                <div class="session-panel">
+                    <!-- Timer Section -->
+                    <div class="timer-section">
+                        <h3>Focus Session</h3>
+                        <div class="timer-display">
+                            <div class="timer-circle">
+                                <svg width="120" height="120">
+                                    <circle cx="60" cy="60" r="50" stroke="#2980B9" stroke-width="4" fill="none" opacity="0.3"/>
+                                    <circle cx="60" cy="60" r="50" stroke="#3498DB" stroke-width="4" fill="none" 
+                                            stroke-dasharray="314.16" stroke-dashoffset="314.16" 
+                                            transform="rotate(-90 60 60)" class="progress-circle"/>
+                                </svg>
+                                <div class="timer-text">
+                                    <span id="timerDisplay">25:00</span>
+                                    <small id="timerMode">Focus</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timer-controls">
+                            <button class="btn btn--primary" id="startTimerBtn">Start Session</button>
+                            <button class="btn btn--secondary hidden" id="pauseTimerBtn">Pause</button>
+                            <button class="btn btn--outline" id="resetTimerBtn">Reset</button>
+                        </div>
+                        <div class="session-type">
+                            <label>Session Type:</label>
+                            <select id="sessionType" class="form-control">
+                                <option value="25">Pomodoro (25 min)</option>
+                                <option value="45">Deep Work (45 min)</option>
+                                <option value="90">Flow State (90 min)</option>
+                                <option value="120">Extended Focus (120 min)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Stats Section -->
+                    <div class="stats-section">
+                        <h3>Today's Progress</h3>
+                        <div class="stat-cards">
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalFocusTime">0h 0m</div>
+                                <div class="stat-label">Focus Time</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="sessionsCompleted">0</div>
+                                <div class="stat-label">Sessions</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="distractionCount">0</div>
+                                <div class="stat-label">Distractions</div>
+                            </div>
+                        </div>
+                        <button class="btn btn--outline btn--full-width" id="distractionBtn">
+                            Mark Distraction
+                        </button>
+                    </div>
+
+                    <!-- AI Recommendations -->
+                    <div class="ai-section">
+                        <h3>AI Recommendations</h3>
+                        <div class="recommendation-card" id="aiRecommendation">
+                            <p>Based on your focus patterns, try the "Deep Focus" preset for optimal concentration.</p>
+                            <button class="btn btn--sm btn--primary" id="applyRecommendationBtn">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Settings Modal -->
+        <div class="modal hidden" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Audio Settings</h3>
+                    <button class="modal-close" id="closeSettingsBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Reverb</label>
+                        <input type="range" id="reverbSlider" min="0" max="100" value="20" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tempo (BPM)</label>
+                        <input type="range" id="tempoSlider" min="60" max="120" value="80" class="form-control">
+                        <span id="tempoValue">80 BPM</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">High-Pass Filter</label>
+                        <input type="range" id="highPassSlider" min="0" max="1000" value="100" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Low-Pass Filter</label>
+                        <input type="range" id="lowPassSlider" min="1000" max="20000" value="8000" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upgrade Modal -->
+        <div class="modal hidden" id="upgradeModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Upgrade to Focus Pro</h3>
+                    <button class="modal-close" id="closeUpgradeBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="pricing-tiers" id="pricingTiers">
+                        <!-- Dynamic content will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
